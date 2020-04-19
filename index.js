@@ -55,12 +55,10 @@ const getLatestLinks = async () => {
   const latestRes = await axios.get(config.LATEST_URL)
   if (latestRes.status != 200)
     return Error('[HorribleApi]: Could not reach horriblesubs.info')
-
   const $ = cheerio.load(latestRes.data)
   const li = $('li').get()
-  for (const i in li) {
+  for (const i in li)
     latestLinks.push(config.BASE_URL + li[i].children[0].attribs.href)
-  }
   return latestLinks
 }
 module.exports = {
