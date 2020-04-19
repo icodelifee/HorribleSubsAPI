@@ -5,7 +5,7 @@ const config = require('./constants')
 const getLatest = async () => {
   const latestLinks = await getAnimeLinks(config.LATEST_URL)
   const result = await getAnimeData(latestLinks)
-  return result
+  return JSON.stringify(result)
 }
 const getAnimeData = async links => {
   const results = []
@@ -69,7 +69,7 @@ const getAnimeLinks = async url => {
 const searchAnime = async query => {
   const searchLinks = await getAnimeLinks(config.SEARCH_URL + query)
   const result = await getAnimeData(searchLinks)
-  return result
+  return JSON.stringify(result)
 }
 module.exports = {
   getLatest,
