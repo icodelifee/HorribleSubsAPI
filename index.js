@@ -8,7 +8,7 @@ const getLatest = async () => {
   return result
 }
 const getAnimeData = async links => {
-  const data = []
+  const results = []
   for (const i in links) {
     const res = await axios.get(links[i])
     if (res.status != 200)
@@ -23,17 +23,17 @@ const getAnimeData = async links => {
       image = config.BASE_URL + image
     }
     const data = await getMagnets(showId)
-    data.push({
+    results.push({
       title: title,
       hqposter: image,
       plot: plot,
       eps: data
     })
   }
-  return data
+  return results
 }
 const getMagnets = async showId => {
-  const data = []
+  const results = []
   const res = await axios.get(config.TORRENT_URL + showId)
   if (res.status != 200)
     return Error('[HorribleApi]: Could not reach horriblesubs.info')
@@ -45,14 +45,14 @@ const getMagnets = async showId => {
     const four80p = rsLink.children[0].children[1].children[0].attribs.href
     const seven20p = rsLink.children[1].children[1].children[0].attribs.href
     const ten80p = rsLink.children[2].children[1].children[0].attribs.href
-    data.push({
+    results.push({
       title: epName,
       '1080p': ten80p,
       '720p': seven20p,
       '480p': four80p
     })
   }
-  return data
+  return results
 }
 const getAnimeLinks = async url => {
   const animeLinks = []
