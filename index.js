@@ -3,10 +3,14 @@ const cheerio = require('cheerio')
 const config = require('./constants')
 
 const getLatest = async () => {
-  const result = []
-  const latestLinks = await getLatestLinks()
-  for (const i in latestLinks) {
-    const res = await axios.get(latestLinks[i])
+  const latestLinks = await getAnimeLinks(config.LATEST_URL)
+  const result = await getAnimeData(latestLinks)
+  return result
+}
+const getAnimeData = async links => {
+  const data = []
+  for (const i in links) {
+    const res = await axios.get(links[i])
     if (res.status != 200)
       return Error('[HorribleApi]: Could not reach horriblesubs.info')
     const $ = cheerio.load(res.data, { xmlMode: true })
@@ -19,14 +23,14 @@ const getLatest = async () => {
       image = config.BASE_URL + image
     }
     const data = await getMagnets(showId)
-    result.push({
+    data.push({
       title: title,
       hqposter: image,
       plot: plot,
       eps: data
     })
   }
-  return result
+  return data
 }
 const getMagnets = async showId => {
   const data = []
@@ -50,17 +54,24 @@ const getMagnets = async showId => {
   }
   return data
 }
-const getLatestLinks = async () => {
-  const latestLinks = []
-  const latestRes = await axios.get(config.LATEST_URL)
-  if (latestRes.status != 200)
+const getAnimeLinks = async url => {
+  const animeLinks = []
+  let animeRes = await axios.get(url)
+  if (animeRes.status != 200)
     return Error('[HorribleApi]: Could not reach horriblesubs.info')
-  const $ = cheerio.load(latestRes.data)
+  const $ = cheerio.load(animeRes.data)
   const li = $('li').get()
   for (const i in li)
-    latestLinks.push(config.BASE_URL + li[i].children[0].attribs.href)
-  return latestLinks
+    animeLinks.push(config.BASE_URL + li[i].children[0].attribs.href)
+  return animeLinks
+}
+
+const searchAnime = async query => {
+  const searchLinks = await getAnimeLinks(config.SEARCH_URL + query)
+  const result = await getAnimeData(searchLinks)
+  return result
 }
 module.exports = {
-  getLatest
+  getLatest,
+  searchAnime
 }
