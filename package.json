@@ -1,0 +1,15 @@
+{
+  "name": "horriblesubsapi",
+  "version": "1.0.0",
+  "description": "A Tiny Scraper For Horrible Subs Website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "iCodeLife <mithunsmenon@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
