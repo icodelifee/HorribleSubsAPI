@@ -2,11 +2,22 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const config = require('./constants')
 
+
+// Get Latest Anime Torrents From HorribleSubs.info [title,poster,plot,torrents(all quality)]
 const getLatest = async () => {
   const latestLinks = await getAnimeLinks(config.LATEST_URL)
   const result = await getAnimeData(latestLinks)
   return JSON.stringify(result)
 }
+ 
+// Search For Animes [not required to specify quality]
+// Check test.js For Examples
+const searchAnime = async query => {
+  const searchLinks = await getAnimeLinks(config.SEARCH_URL + query)
+  const result = await getAnimeData(searchLinks)
+  return JSON.stringify(result)
+}
+
 const getAnimeData = async links => {
   const results = []
   for (const i in links) {
@@ -66,11 +77,7 @@ const getAnimeLinks = async url => {
   return animeLinks
 }
 
-const searchAnime = async query => {
-  const searchLinks = await getAnimeLinks(config.SEARCH_URL + query)
-  const result = await getAnimeData(searchLinks)
-  return JSON.stringify(result)
-}
+
 module.exports = {
   getLatest,
   searchAnime
